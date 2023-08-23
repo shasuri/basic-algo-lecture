@@ -2,11 +2,23 @@
 using namespace std;
 
 void insert(int idx, int num, int arr[], int& len){
-
+  int i = len;
+  while(i > idx)
+  {
+    arr[i] = arr[--i];
+  }
+  arr[idx] = num;
+  len++;
 }
 
 void erase(int idx, int arr[], int& len){
-  
+  int i = idx;
+
+  while (i < len - 1)
+  {
+    arr[i] = arr[++i];
+  }
+  len--;
 }
 
 void printArr(int arr[], int& len){
