@@ -6,7 +6,16 @@ int dat[MX], pre[MX], nxt[MX];
 int unused = 1;
 
 void insert(int addr, int num){
+  dat[unused] = num;
+  pre[unused] = addr;
+  nxt[unused] = nxt[addr];
 
+  if(nxt[unused] != -1){
+    pre[nxt[unused]] = unused;
+  }
+
+  nxt[pre[unused]] = unused;
+  unused++;
 }
 
 void erase(int addr){
@@ -51,6 +60,8 @@ void erase_test(){
 int main(void) {
   fill(pre, pre+MX, -1);
   fill(nxt, nxt+MX, -1);
+  nxt[0] = unused;
+
   insert_test();
   erase_test();
 }
