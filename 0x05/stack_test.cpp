@@ -5,29 +5,48 @@ const int MX = 1000005;
 int dat[MX];
 int pos = 0;
 
-void push(int x){
-
+void push(int x)
+{
+  if (pos < MX)
+  {
+    dat[pos++] = x;
+  }
 }
 
-void pop(){
-
+void pop()
+{
+  if (pos > 0)
+  {
+    pos--;
+  }
 }
 
-int top(){
-
+int top()
+{
+  if (pos > 0)
+  {
+    return dat[pos - 1];
+  }
+  return -1;
 }
 
-void test(){
-  push(5); push(4); push(3);
+void test()
+{
+  push(5);
+  push(4);
+  push(3);
   cout << top() << '\n'; // 3
-  pop(); pop();
+  pop();
+  pop();
   cout << top() << '\n'; // 5
-  push(10); push(12);
+  push(10);
+  push(12);
   cout << top() << '\n'; // 12
   pop();
   cout << top() << '\n'; // 10
 }
 
-int main(void) {
-	test();
+int main(void)
+{
+  test();
 }
