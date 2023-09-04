@@ -22,22 +22,27 @@ void push(int);
 int pop(void);
 int size(void);
 bool empty(void);
+void clear(void);
 
 bool isBalanced(string);
 
 int main(void)
 {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
     string s;
 
     while (1)
     {
-        cin.ignore();
         getline(cin, s);
+        // cout << s << '\n';
         if (s[0] == DOT)
         {
             break;
         }
         cout << (isBalanced(s) ? YES : NO) << '\n';
+        clear();
     }
 }
 
@@ -92,7 +97,7 @@ void push(int n)
 }
 int pop(void)
 {
-    return empty() ? -1 : stk[--pos];
+    return (empty() ? -1 : stk[--pos]);
 }
 int size(void)
 {
@@ -100,5 +105,10 @@ int size(void)
 }
 bool empty(void)
 {
-    return size() <= 0;
+    return (size() <= 0);
+}
+
+void clear(void)
+{
+    pos = 0;
 }
