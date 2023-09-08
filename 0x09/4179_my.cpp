@@ -6,6 +6,7 @@
 using namespace std;
 
 #define MAX_RC 1000
+#define MAX_STEP 1001001
 
 struct Space
 {
@@ -14,10 +15,11 @@ struct Space
     int step = 0;
 };
 
-int maze[MAX_RC][MAX_RC];
-bool jihoonVisit[MAX_RC][MAX_RC];
+int maze[MAX_RC + 1][MAX_RC + 1];
+bool jihoonVisit[MAX_RC + 1][MAX_RC + 1];
 int R, C;
-Space jihoonStart, fireStart;
+Space jihoonStart;
+queue<Space> fQue;
 
 int dy[] = {1, -1, 0, 0};
 int dx[] = {0, 0, 1, -1};
@@ -65,36 +67,32 @@ void setMaze()
         cin >> row;
         for (int x = 0; x < C; x++)
         {
+            jihoonVisit[y][x] = false;
             switch (row[x])
             {
             case '#':
-                maze[y][x] = -2;
+                maze[y][x] = MAX_STEP;
                 break;
             case '.':
-                maze[y][x] = -1;
+                maze[y][x] = MAX_STEP + 1;
                 break;
             case 'J':
                 jihoonStart = {y, x, 0};
-                maze[y][x] = -1;
+                maze[y][x] = MAX_STEP + 1;
                 break;
             case 'F':
-                fireStart = {y, x};
+                fQue.push({y, x});
                 maze[y][x] = 0;
                 break;
             default:
                 break;
             }
-
-            jihoonVisit[y][x] = false;
         }
     }
 }
 
 void fireMaze(void)
 {
-    queue<Space> fQue;
-    fQue.push(fireStart);
-
     Space fPresent;
     int ny, nx;
 
@@ -120,7 +118,7 @@ void fireMaze(void)
 bool isFirable(int y, int x)
 {
     return isInMaze(y, x) &&
-               maze[y][x] == -1;
+           maze[y][x] == MAX_STEP + 1;
 }
 
 bool isInMaze(int y, int x)
@@ -174,7 +172,7 @@ bool isVisitable(Space j)
     return isInMaze(j.y, j.x) &&
            !jihoonVisit[j.y][j.x] &&
            maze[j.y][j.x] > j.step &&
-           maze[j.y][j.x] != -2;
+           maze[j.y][j.x] != MAX_STEP;
 }
 
 bool isExit(Space j)
