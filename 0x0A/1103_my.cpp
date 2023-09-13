@@ -109,7 +109,7 @@ void dfs(Coin present)
 
             if (turnDp[next.y][next.x] >= next.turn)
             {
-                continue;;
+                continue;
             }
             else
             {
