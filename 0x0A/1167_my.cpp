@@ -1,3 +1,5 @@
+// #define DEBUG_MODE
+
 #include <iostream>
 #include <vector>
 
@@ -87,6 +89,8 @@ void input(void)
 
 int dfs(int src)
 {
+    visit[src] = true;
+
     RadiusPair radPair;
     Edge edge;
     int childRadius;
@@ -96,12 +100,14 @@ int dfs(int src)
         edge = *it;
         if (!visit[edge.dst])
         {
-            visit[edge.dst] = true;
-
             childRadius = dfs(edge.dst) + edge.cost;
             radPair.pushRadius(childRadius);
         }
     }
+
+#ifdef DEBUG_MODE
+    cout << src << " : " << radPair.first << " / " << radPair.second << endl;
+#endif
 
     maxDiameter = max(maxDiameter, radPair.getDiameter());
 
