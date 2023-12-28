@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-#define DEBUG_MODE
+// #define DEBUG_MODE
 
 typedef unsigned long long ull;
 
@@ -36,7 +36,6 @@ bool isRowCovered(ull, ull);
 void pasteSticker(Sticker &, short, short);
 
 #ifdef DEBUG_MODE
-// ■□◼◻▢
 string PASTED = "◼";
 string BLANK = "◻";
 void printLaptop(void)
@@ -64,13 +63,12 @@ void printSticker(Sticker s){
     cout << '\n';
 }
 
-void printRow(ull r)
+void printRow(ull r, short rowLen)
 {
-    for (short w = 0; w < M; w++)
+    for (short w = 0; w < rowLen; w++)
     {
         cout << ((r & (PIXEL << w)) ? PASTED : BLANK);
     }
-    cout << '\n';
 }
 
 #endif
@@ -106,6 +104,11 @@ void tryPasteSticker(void)
 
     inputSticker(s);
 
+#ifdef DEBUG_MODE
+    cout << "Input sticker =>\n";
+    printSticker(s);
+#endif
+
     if (findPastableDirection(s))
     {
         pasted += s.ns;
@@ -126,7 +129,7 @@ void inputSticker(Sticker &s)
 
             if (pixel)
             {
-                s.sticker[r] |= (PIXEL << (s.C - c - 1));
+                s.sticker[r] |= (PIXEL << c);
                 s.ns++;
             }
         }
@@ -141,7 +144,7 @@ bool findPastableDirection(Sticker &s)
         {
             rotateSticker(s);
         }
-
+        
         if (findPastablePosition(s))
         {
             return true;
@@ -166,7 +169,22 @@ void rotateSticker(Sticker &s)
     {
         for (short c = 0; c < s.C; c++)
         {
-            s.sticker[r] |= (tmp.sticker[tmp.R - c - 1] & (PIXEL << r));
+#ifdef DEBUG_MODE
+            printRow(s.sticker[r], s.C);
+            cout << " |= ";
+            printRow(tmp.sticker[tmp.R - c - 1], tmp.C);
+            cout << " & ";
+            printRow(PIXEL << r, tmp.C);
+#endif
+            if (tmp.sticker[tmp.R - c - 1] & (PIXEL << r))
+            {
+                s.sticker[r] |= PIXEL << c;
+            }
+#ifdef DEBUG_MODE
+            cout << " -> ";
+            printRow(s.sticker[r], s.C);
+            cout << '\n';
+#endif
         }
     }
 
@@ -178,9 +196,9 @@ void rotateSticker(Sticker &s)
 
 bool findPastablePosition(Sticker &s)
 {
-    for (short r = 0; r < N - s.R; r++)
+    for (short r = 0; r <= N - s.R; r++)
     {
-        for (short c = 0; c < M - s.C; c++)
+        for (short c = 0; c <= M - s.C; c++)
         {
             if (checkUncovered(s, r, c))
             {
@@ -199,7 +217,7 @@ bool checkUncovered(Sticker &s, short h, short w)
 #endif
     for (short r = 0; r < s.R; r++)
     {
-        if (isRowCovered(laptop[h + r], s.sticker[r] << w))
+        if (isRowCovered(laptop[r + h], s.sticker[r] << w))
         {
             return false;
         }
@@ -212,9 +230,11 @@ bool isRowCovered(ull l, ull s)
 
 #ifdef DEBUG_MODE
     cout << 'l';
-    printRow(l);
+    printRow(l, M);
+    cout << '\n';
     cout << 's';
-    printRow(s);
+    printRow(s, M);
+    cout << '\n';
 #endif
 
     return l & s;
