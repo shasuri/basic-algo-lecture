@@ -14,7 +14,7 @@ constexpr short MAX_N = 20;
 constexpr short DIR = 4;
 constexpr short START_STEP = 1;
 constexpr short END_STEP = 5;
-constexpr Block Blank = 0;
+constexpr Block BLANK = 0;
 
 enum DIRECTION
 {
@@ -133,13 +133,30 @@ void mergeBlocks(const short dir, Block dst[MAX_N][MAX_N])
 
 void mergeLeft(Block dst[MAX_N][MAX_N])
 {
+    short tail = -1; // last stacked on row.
     for (short r = 0; r < N; r++)
     {
-        for (short c = 0; c < count; c++)
+        tail = -1;
+        for (short c = 0; c < N; c++)
         {
-            /* code */
+            if (dst[r][c] != BLANK)
+            {
+                // --> stay
+                // --> stack
+                if (isFirstBlock(tail) || isNotMergable(dst[r][c], dst[r][tail]))
+                {
+                    dst[r][tail++] = dst[r][c];
+                    dst[r][c] = BLANK;
+                }
+                // --> merge
+                else
+                {
+                    dst[r][tail] *= 2;
+                    dst[r][c] = BLANK;
+                }
+                
+            }
+            
         }
-        
     }
-    
 }
